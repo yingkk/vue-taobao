@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.3.2",
+    "eslint-loader": "^3.0.2",
     "node-sass": "^4.13.0",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
@@ -24,5 +25,18 @@
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
     "vue-template-compiler": "^2.6.10"
-  }
+  },
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yingkk/vue-taobao.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yingkk/vue-taobao/issues"
+  },
+  "homepage": "https://github.com/yingkk/vue-taobao#readme",
+  "description": ""
 }

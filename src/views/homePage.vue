@@ -11,8 +11,8 @@
 <script>
 import homeHeader from "../components/homePage/header";
 import siteTop from "../components/homePage/siteTop";
-import siteMenu from "../components/menu/menu";
-import siteMain from "../components/main/main";
+import siteMenu from "../components/homePage/menu/menu";
+import siteMain from "../components/homePage/main/main";
 export default {
   components: {
     homeHeader,

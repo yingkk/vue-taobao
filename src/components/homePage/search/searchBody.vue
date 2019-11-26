@@ -55,7 +55,6 @@ export default {
       this.selectedTab = tab;
     },
     inputHandle() {
-      console.log(this.searchkey);
       if (this.searchkey) {
         this.isSearchIconShow = false;
       } else {

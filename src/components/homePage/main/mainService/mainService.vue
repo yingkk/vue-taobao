@@ -1,7 +1,7 @@
 <template>
   <div class="service">
     <ul>
-      <li v-for="(service, index) in serviceData" :key="`service-${index}`">
+      <li v-for="(service, index) in serviceData" :key="`service-${index}`" @click="routeHandler">
         <a v-for="(item, index) in service.items" :key="`service-item-${index}`" :href="item.href">
           {{item.label}}
           <i v-if="(index+1) < service.items.length">/</i>
@@ -14,6 +14,15 @@
 
 <script>
 export default {
+  methods: {
+    routeHandler() {
+      this.$router.push({
+        name: 'common'
+      })
+
+    }
+
+  },
   data() {
     return {
       serviceData: [
