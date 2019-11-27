@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import homePage from '../views/homePage'
-// import promo from '../components/homePage/common/promo'
-// import common from '../components/homePage/common/common'
 
 Vue.use(VueRouter)
 
@@ -20,8 +18,18 @@ const routes = [
       {
         path: "common",
         name: "common",
-        component:  () => import('../components/homePage/common/common')
+        component: () => import('../components/homePage/common/common')
+      },
+      {
+        path: "pay",
+        name: "pay",
+        component: () => import('../components/homePage/main/mainRight/common/pay')
       }
+      // ,{
+      //   path: "/",
+      //   name: "apps",
+      //   component: () => import('../components/homePage/main/mainRight/apps/apps.vue')
+      // }
     ]
   }
 ]

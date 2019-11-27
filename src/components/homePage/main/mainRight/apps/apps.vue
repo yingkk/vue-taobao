@@ -10,7 +10,11 @@
       </div>
     </div>
     <div class="apps-bd">
-      <div class="apps-bd-item" v-for="(app, index) in appsData" :key="`apps-item-${index}`">
+      <div
+        class="apps-bd-item"
+        v-for="(app, index) in appsData"
+        :key="`apps-item-${index}`"
+      >
         <a :href="app.href">
           <img :src="app.src" :alt="`手机app - ${app.alt}`" />
         </a>
@@ -78,11 +82,11 @@ export default {
       font-weight: bold;
     }
     .apps-hd-more {
-      a{
+      a {
         font-size: 12px;
         text-decoration: none;
         color: #3c3c3c;
-        &:hover{
+        &:hover {
           color: #f40;
           cursor: pointer;
         }

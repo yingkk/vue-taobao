@@ -166,7 +166,6 @@ export default {
         position: relative;
         width: 472px;
         justify-content: flex-start;
-        width: 472px;
         input {
           width: 100%;
           height: 100%;

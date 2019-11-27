@@ -5,7 +5,6 @@
         <main-service />
         <div class="main-panel">
           <router-view />
-        
         </div>
       </div>
       <div class="main-right">
@@ -13,7 +12,9 @@
         <main-tip />
         <main-notice />
         <main-option />
-        <main-app />
+
+       <!-- <router-view /> -->
+        <!-- <main-app /> -->
       </div>
     </div>
   </div>
@@ -26,7 +27,7 @@ import mainMember from "./mainRight/member/member";
 import mainTip from "./mainRight/tips/tips";
 import mainNotice from "./mainRight/notices/notices";
 import mainOption from "./mainRight/options/options";
-import mainApp from "./mainRight/apps/apps";
+// import mainApp from "./mainRight/apps/apps";
 
 export default {
   components: {
@@ -34,8 +35,8 @@ export default {
     mainMember,
     mainTip,
     mainNotice,
-    mainOption,
-    mainApp
+    mainOption
+    // mainApp
   },
   data() {
     return {};
@@ -59,7 +60,7 @@ export default {
       justify-content: flex-start;
       width: 900px;
       height: 100%;
-      .main-panel{
+      .main-panel {
         display: flex;
         justify-content: flex-start;
         width: 700px;

@@ -19,9 +19,7 @@ export default {
       this.$router.push({
         name: 'common'
       })
-
     }
-
   },
   data() {
     return {

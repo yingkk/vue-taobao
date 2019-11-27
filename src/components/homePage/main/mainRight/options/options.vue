@@ -8,7 +8,7 @@
         </a>
       </li>
     </ul> -->
-    <div class="options-item" v-for="(item, index) in optionsData" :key="`options-item-${index}`">
+    <div class="options-item" v-for="(item, index) in optionsData" :key="`options-item-${index}`" @click="routerHandler">
       <a :href="item.href">
         <div
           class="options-item-icon"
@@ -23,6 +23,13 @@
 
 <script>
 export default {
+  methods:{
+    routerHandler() {
+      this.$route.push({
+        name: "pay"
+      })
+    }
+  },
   data() {
     return {
       imgOptions: [
