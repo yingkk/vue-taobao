@@ -1,7 +1,15 @@
 <template>
   <div class="other-wrap">
     <div class="other">
-      <select-tag :items="dataList" @change="changeHandler" v-model="defaultValue" placeholder="选我"/>
+      <select-tag
+        :items="dataList"
+        v-model="checked"
+        placeHolder="选一个吧"
+        @focusFatherHandler="focusFatherHandler"
+        @blurFatherHandler="blurFatherHandler"
+        clearable = true
+        multiple 
+      />
     </div>
   </div>
 </template>
@@ -9,23 +17,23 @@
 <script>
 import selectTag from "../select/select";
 export default {
-  methods: {
-    changeHandler(value) {
-      console.log(value);
-
-    }
-
-  },
   components: { selectTag },
+  methods: {
+    focusFatherHandler() {
+      console.log("do focus things");
+    },
+    blurFatherHandler() {
+      console.log("do blur things");
+    }
+  },
   watch: {
-     defaultValue(newValue, oldValue) {
-       console.log(newValue);
-
-     }
+    checked(newValue, oldValue) {
+      console.log(newValue);
+    }
   },
   data() {
     return {
-      defaultValue: 2,
+      checked: -1,
       dataList: [
         {
           key: 1,
@@ -42,9 +50,13 @@ export default {
         {
           key: 4,
           value: "重庆"
+        },
+        {
+          key: 5,
+          value: "厦门"
         }
       ]
-    }
+    };
   }
 };
 </script>
