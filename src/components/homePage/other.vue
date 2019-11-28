@@ -8,7 +8,7 @@
         @focusFatherHandler="focusFatherHandler"
         @blurFatherHandler="blurFatherHandler"
         clearable = true
-        multiple 
+        multiple
       />
     </div>
   </div>
@@ -33,11 +33,11 @@ export default {
   },
   data() {
     return {
-      checked: -1,
+      checked: [1, 2],
       dataList: [
         {
           key: 1,
-          value: "西安"
+          value: "西安火炬大厦觉得还多久啊"
         },
         {
           key: 2,
