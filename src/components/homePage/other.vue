@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      checked: [1, 2],
+      checked: [1],
       dataList: [
         {
           key: 1,
