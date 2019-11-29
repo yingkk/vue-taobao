@@ -1,70 +1,68 @@
 <template>
   <div class="select">
-    <div class="select-main">
-      <div class="mult-select" v-if="multiple" @click="clickHandler">
-        <div class="mult-input">
+    <!-- 复选 -->
+    <div v-if="multiple" class="select-mult">
+      <div class="select-panel" @click="showItems">
+        <div class="select-panel-input">
           <input
             type="text"
             readonly="readonly"
-            :placeholder="!isLightKey.length ? tip : ''"
-            @focus="focus"
-            @blur="blur"
-            ref="input"
+            :placeholder="multiple ? '' : dfaultPlaceHolder"
+            @blur="childBlur"
+            @focus="childFocus"
           />
         </div>
-        <div class="mult-select-item-wrap">
+        <div class="select-mult-items">
           <div
-            class="mult-select-item"
-            @click="closeMultItem(index)"
-            v-for="(item, index) in multItems"
-            :key="`mult-item-${index}`"
+            class="select-mult-item"
+            @click="deleteItem(index)"
+            v-for="(item, index) in selectedList"
+            :key="`selected-item-${index}`"
           >
             <span>{{ item.value }}</span>
             <i class="fa fa-close"></i>
           </div>
         </div>
-
-        <div class="select-close" @click="clearSelected">
-          <i :class="[selected.value && isShowClear ? 'fa fa-close' : '']"></i>
-        </div>
-        <div class="select-icon">
-          <i :class="[isShow ? 'fa fa-angle-up' : 'fa fa-angle-down']"></i>
+        <div class="select-panel-icon">
+          <i :class="[ isItemsShow ? 'fa fa-angle-up' : 'fa fa-angle-down']"></i>
         </div>
       </div>
-      <!-- 单选 -->
+    </div>
+    <!-- 复选 -->
+
+    <!-- 单选 -->
+    <div
+      v-else
+      :class="['select-inner', selectedValue ? 'border-light' : '', selectedValue && clearable ? 'display-close' : '']"
+    >
+      <div class="select-panel" @click="showItems">
+        <div class="select-panel-input">
+          <input
+            v-model="selectedValue"
+            type="text"
+            readonly="readonly"
+            :placeholder="defaultPlaceHolder"
+            @blur="childBlur"
+            @focus="childFocus"
+          />
+        </div>
+        <div class="select-close" @click="clearableItem">
+          <i :class="[ selectedValue && clearable ? 'fa fa-close' : '']"></i>
+        </div>
+        <div class="select-panel-icon">
+          <i :class="[ isItemsShow ? 'fa fa-angle-up' : 'fa fa-angle-down']"></i>
+        </div>
+      </div>
+    </div>
+    <!-- 单选 -->
+
+    <div class="select-items" v-show="isItemsShow">
       <div
-        v-else
-        :class="['select-input',selected.value ? 'is-border-light': '',selected.value && isShowClear ? 'display-close' : '']"
-        @click="clickHandler"
-      >
-        <input
-          v-model="selected.value"
-          type="text"
-          readonly="readonly"
-          :placeholder="tip"
-          @focus="focus"
-          @blur="blur"
-        />
-        <div class="select-close" @click="clearSelected">
-          <i :class="[selected.value && isShowClear ? 'fa fa-close' : '']"></i>
-        </div>
-        <div class="select-icon">
-          <i :class="[isShow ? 'fa fa-angle-up' : 'fa fa-angle-down']"></i>
-        </div>
-      </div>
-
-      <div class="select-data-wrap">
-        <transition name="slide-fade">
-          <div class="select-data" v-show="isShow">
-            <div
-              :class="[ isLightKey.includes(item.key) ? 'is-light':'select-data-item']"
-              @click="chooseItem(item)"
-              v-for="(item, index) in items"
-              :key="`item-${index}`"
-            >{{item.value}}</div>
-          </div>
-        </transition>
-      </div>
+        :class="['select-item', highLightList.includes(item.key) ? 'high-light' : '']"
+        @click="chooseItem(item)"
+        v-for="(item, index) in items"
+        :key="`item-${index}`"
+      >{{ item.value }}</div>
     </div>
   </div>
 </template>
@@ -72,197 +70,163 @@
 <script>
 export default {
   props: ["items", "checked"],
-  model: { prop: "checked", event: "change" },
+  model: {
+    prop: "checked",
+    event: "change"
+  },
+  data() {
+    return {
+      isItemsShow: false,
+      selectedList: [],
+      highLightList: [],
+      defaultPlaceHolder: "请选择",
+      selectedValue: ""
+    };
+  },
   created() {
-    //2.调用
-    this.addEventlinster();
-    this.tip = this.$attrs.placeHolder ? this.$attrs.placeHolder : this.tip;
+    this.selectedList = this.items.filter(item =>
+      this.checked.includes(item.key)
+    );
+    this.selectedValue = this.selectedList[0].value;
+    this.highLightList = this.checked;
 
-    if (this.multiple) {
-      this.isLightKey = this.checked;
-      this.multItems = this.items.filter(t => this.checked.includes(t.key));
-    } else {
-      const defaultItem = this.items.filter(item => item.key === this.checked);
-      this.selected = defaultItem[0];
-      this.isLightKey.push(defaultItem[0].key);
-    }
+    this.defaultPlaceHolder = this.$attrs.placeHolder
+      ? this.$attrs.placeHolder
+      : this.defaultPlaceHolder;
   },
   computed: {
+    clearable() {
+      return this.$attrs.hasOwnProperty("clearable");
+    },
     multiple() {
       return this.$attrs.hasOwnProperty("multiple");
-    },
-    isShowClear() {
-      return this.$attrs.hasOwnProperty("clearable");
     }
   },
   methods: {
-    // 1.body添加事件监听
-    addEventlinster() {
-      document.body.addEventListener("click", () => {
-        this.isShow = false;
-        // this.$refs.input.blur();
-      });
-    },
-    closeMultItem(index) {
-      this.multItems.splice(index, 1);
-      this.isLightKey.splice(index, 1);
-    },
-    clickHandler(event) {
-      //3.点击事件 阻止事件冒泡（阻止事件冒泡：保证父级dom点击事件不渗透到子级）
-      event.stopPropagation();
-      this.isShow = !this.isShow;
-      // 外部元素聚焦input
-      this.$refs.input.focus();
+    showItems() {
+      this.isItemsShow = !this.isItemsShow;
     },
     chooseItem(item) {
       if (item) {
         if (this.multiple) {
-          this.multItems.push(item);
-          this.isLightKey.push(item.key);
-          this.$emit("change", this.isLightKey);
+          this.selectedList.push(item);
+          this.selectedList.push(item.key);
         } else {
-          this.selected = item;
-          this.$emit("change", item.key);
-          this.isShow = !this.isShow;
-          this.isLightKey.push(item.key);
+          this.selectedList = [];
+          this.selectedList.push(item);
+          this.highLightList = [];
+          this.highLightList.push(item.key);
+          this.selectedValue = item.value;
         }
+        this.$emit("change", this.highLightList);
+        this.isItemsShow = false;
       }
     },
-    focus() {
-      this.$emit("focusFatherHandler");
+    clearableItem() {
+      this.selectedList.splice(0, 1);
+      this.highLightList.splice(0, 1);
+      this.selectedValue = "";
+      this.$emit("change", this.highLightList);
     },
-    blur() {
-      this.$emit("blurFatherHandler");
+    childFocus() {
+      this.$emit("focusHandler");
     },
-    clearSelected() {
-      this.selected = {};
-      this.isShow = false;
-      this.isLightKey = [];
-      this.$emit("change", "");
+    childBlur() {
+      this.$emit("blurHandler");
+    },
+    deleteItem(index) {
+      this.selectedList.splice(index, 1);
+      this.highLightList.splice(index, 1);
+      this.$emit("change", this.highLightList);
     }
-  },
-  data() {
-    return {
-      isShow: false,
-      selected: {},
-      isLightKey: [],
-      tip: "请选择",
-      focusHandler: "",
-      blurHandler: "",
-      isMore: false,
-      multItems: []
-    };
   }
 };
 </script>
-
 <style scoped lang="scss">
 .select {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  .select-main {
-    font-size: 14px;
-    width: 800px;
-    height: 100%;
-    .mult-select,
-    .select-input {
-      position: relative;
-      width: 300px;
-      min-height: 45px;
-      border: 1px solid #a9a9a9;
-      // overflow: hidden;
-      border-radius: 10px;
-      input {
-        width: 100%;
-        height: 100%;
-        border: none;
-        outline: none;
-        border-color: transparent;
-        text-indent: 1em;
-        display: inline-block;
-      }
-      .mult-input {
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-      .mult-select-item-wrap {
-        position: absolute;
-        top: 10px;
-        left: 10px;
+  width: 800px;
+  height: 500px;
+  border: 1px solid #a9a9a9;
+  font-size: 14px;
+  .select-mult,
+  .select-inner {
+    width: 240px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 1px solid #a9a9a9;
+    border-radius: 5px;
+    .select-panel {
+      width: 260px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      .select-panel-input {
+        margin: 3px 0 3px 3px;
         width: 80%;
-        height: 100%;
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        .mult-select-item {
-          // width: 40px;
-          height: 20px;
-          margin-left: 5px;
-          border: 1px solid blue;
-          color: blue;
+        input {
+          font-size: 14px;
+          width: 100%;
+          min-height: 35px;
+          border: none;
+          outline: none;
+          text-indent: 1em;
+        }
+        input::-webkit-input-placeholder {
+          font-size: 14px;
         }
       }
-      
-      // + 表示 input下第一个为select-close的兄弟元素
-      // input:hover + .select-close {
-      //   display: block;
-      // }
-      // ~ 表示 display-close 的所有同级兄弟元素
-      .display-close:hover ~ .select-icon {
-        display: none;
+      .select-panel-icon {
+        margin-right: 40px;
       }
       .select-close {
-        position: absolute;
-        top: 15px;
-        left: 260px;
+        margin-right: 40px;
         display: none;
         z-index: 9999;
-        transition: all 0.8s;
-      }
-      .select-icon {
-        position: absolute;
-        top: 15px;
-        left: 260px;
-        transition: all 0.8s;
+        cursor: pointer;
       }
     }
-    .select-input:hover .select-close {
-      display: block;
-    }
-    .is-border-light {
-      border-color: blue;
-    }
-    .select-data-wrap {
-      width: 300px;
-      height: 100%;
-      .select-data {
-        margin-top: 10px;
-        border: 1px solid #a9a9a9;
-        border-radius: 10px;
-        .select-data-item {
-          color: black;
-          line-height: 14px;
-          padding: 5px 0;
-        }
-        .is-light {
-          color: blue;
-        }
+    .select-mult-items {
+      width: 80%;
+      display: flex;
+      justify-content: flex-start;
+      flex-flow: wrap;
+      align-items: center;
+      .select-mult-item {
+        margin: 0 3px;
+        background-color: #eee;
+        padding: 0 3px;
+        border-radius: 8px;
       }
     }
   }
-}
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateY(10px);
-  opacity: 0;
+  .select-items {
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 240px;
+    min-height: 90px;
+    border: 1px solid #a9a9a9;
+    border-radius: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+    .select-item {
+      padding-top: 5px;
+    }
+    .high-light {
+      color: blue;
+      font-weight: bold;
+    }
+  }
+  .border-light {
+    border-color: blue;
+  }
+  // 当显示close时，鼠标移动到display-close区域时，所有的下拉、收起按钮隐藏
+  .display-close:hover .select-panel-icon {
+    display: none;
+  }
+  // 鼠标移动到select-panel上时，select-panel里的close标签显示
+  .select-panel:hover .select-close {
+    display: block;
+  }
 }
 </style>

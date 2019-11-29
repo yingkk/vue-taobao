@@ -5,10 +5,9 @@
         :items="dataList"
         v-model="checked"
         placeHolder="选一个吧"
-        @focusFatherHandler="focusFatherHandler"
-        @blurFatherHandler="blurFatherHandler"
-        clearable = true
-        multiple
+        @focusHandler="focusHandler"
+        @blurHandler="blurHandler"
+        clearable
       />
     </div>
   </div>
@@ -19,10 +18,10 @@ import selectTag from "../select/select";
 export default {
   components: { selectTag },
   methods: {
-    focusFatherHandler() {
+    focusHandler() {
       console.log("do focus things");
     },
-    blurFatherHandler() {
+    blurHandler() {
       console.log("do blur things");
     }
   },
@@ -33,11 +32,11 @@ export default {
   },
   data() {
     return {
-      checked: [1, 2],
+      checked: [1],
       dataList: [
         {
           key: 1,
-          value: "西安火炬大厦觉得还多久啊"
+          value: "西安"
         },
         {
           key: 2,
