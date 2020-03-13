@@ -4,12 +4,17 @@
     <div v-if="multiple" class="select-mult">
       <div class="select-panel" @click="showItems">
         <div :class="['select-panel-input', this.highLightList.length && multiple ? 'clear-area': '']">
-          <input
+          <!-- <input
             type="text"
             readonly="readonly"
             :placeholder="defaultPlaceHolder"
             @blur="childBlur"
             @focus="childFocus"
+          /> -->
+          <input
+            type="text"
+            readonly="readonly"
+            v-on="inputListeners"            
           />
         </div>
         <div class="select-mult-items">
@@ -101,6 +106,14 @@ export default {
     },
     multiple() {
       return this.$attrs.hasOwnProperty("multiple");
+    },
+    inputListeners(){
+      var vm = this;
+      return Object.assign({}, this.$listeners, {
+        input (event){
+            vm.$emit("input", event.target.value)
+        }
+      })
     }
   },
   methods: {
@@ -164,7 +177,7 @@ export default {
 <style scoped lang="scss">
 .select {
   width: 800px;
-  height: 500px;
+  height: 240px;
   border: 1px solid #a9a9a9;
   font-size: 14px;
   .select-mult,

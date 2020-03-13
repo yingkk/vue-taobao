@@ -5,6 +5,8 @@
     <site-menu />
     <site-main />
     <other-area />
+    <dialog-tag />
+    <dialog-remind />
   </div>
 </template>
 
@@ -16,13 +18,17 @@ import siteMenu from "../components/homePage/menu/menu";
 import siteMain from "../components/homePage/main/main";
 
 import otherArea from "../components/homePage/other";
+import dialogTag from "../components/dialog/dialog";
+import dialogRemind from "../components/dialogModel/dialogModel";
 export default {
   components: {
     homeHeader,
     siteTop,
     siteMenu,
     siteMain,
-    otherArea
+    otherArea,
+    dialogTag,
+    dialogRemind
   }
 };
 </script>

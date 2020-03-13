@@ -66,7 +66,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 150px;
+  height: 300px;
   .other {
     display: flex;
     justify-content: flex-start;
